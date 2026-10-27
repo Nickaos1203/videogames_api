@@ -4,3 +4,5 @@ Scrapy
 scrapy-user-agents
 psycopg2-binary
 pandas
+dbt-core
+dbt-postgres
