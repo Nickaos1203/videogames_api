@@ -1,0 +1,6 @@
+fastapi
+python_dotenv
+Scrapy
+scrapy-user-agents
+psycopg2-binary
+pandas
