@@ -15,3 +15,15 @@ CREATE TABLE bronze.raw_videogames (
     scraped_at TIMESTAMPTZ DEFAULT NOW(),
     raw_data JSONB NOT NULL
 );
+
+
+-- Autorisation sur la base de données, remplacez [USER] par le nom de l'utilisateur
+GRANT USAGE ON SCHEMA bronze TO [USER];
+
+GRANT INSERT, SELECT, UPDATE
+ON TABLE bronze.raw_videogames
+TO [USER];
+
+GRANT USAGE, SELECT
+ON SEQUENCE bronze.raw_videogames_ingestion_id_seq
+TO [USER];

@@ -1,3 +1,4 @@
+
 import json
 import os
 from pathlib import Path
@@ -6,15 +7,16 @@ import psycopg2
 from dotenv import load_dotenv
 from psycopg2.extras import Json
 
-# Chargement des variables .env
-load_dotenv()
+# Chemins absolus calculés à partir de l'emplacement du script
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parent
 
-# Vérification du chargement
-print("Database :", os.getenv("DB_NAME"))
-print("User :", os.getenv("DB_USER"))
-print("Password chargé :", bool(os.getenv("DB_PASSWORD")))
+# Chargement du .env situé à la racine du projet
+load_dotenv(PROJECT_ROOT / ".env")
 
-JSON_FILE = "videogames_dataset.json"
+# Fichier JSON situé dans scripts_python
+JSON_FILE = SCRIPT_DIR / "videogames_dataset.json"
+
 
 def load_bronze():
     if not JSON_FILE.exists():
@@ -25,10 +27,18 @@ def load_bronze():
     with JSON_FILE.open("r", encoding="utf-8") as file:
         games = json.load(file)
 
+    # Accepte une liste de jeux ou un objet unique
+    if isinstance(games, dict):
+        games = [games]
+
     if not isinstance(games, list):
         raise ValueError(
             "Le fichier JSON doit contenir une liste de jeux."
         )
+
+    print("Database :", os.getenv("DB_NAME"))
+    print("User :", os.getenv("DB_USER"))
+    print("Password chargé :", bool(os.getenv("DB_PASSWORD")))
 
     connection = psycopg2.connect(
         host=os.environ["DB_HOST"],
@@ -41,11 +51,16 @@ def load_bronze():
     try:
         with connection:
             with connection.cursor() as cursor:
+                processed = 0
+
                 for game in games:
                     url = game.get("url")
 
                     if not url:
-                        print("Jeu ignoré : URL absente")
+                        print(
+                            f"Jeu ignoré : URL absente "
+                            f"(id={game.get('id')})"
+                        )
                         continue
 
                     cursor.execute(
@@ -53,15 +68,15 @@ def load_bronze():
                         INSERT INTO bronze.raw_videogames
                             (source_url, raw_data)
                         VALUES (%s, %s)
-                        ON CONFLICT (source_url)
-                        DO UPDATE SET
-                            raw_data = EXCLUDED.raw_data,
-                            scraped_at = NOW();
                         """,
                         ("https://www.metacritic.com", Json(game)),
                     )
 
-        print(f"Chargement terminé : {len(games)} jeux traités.")
+                    processed += 1
+
+        print(
+            f"Chargement terminé : {processed} jeux traités."
+        )
 
     finally:
         connection.close()
