@@ -1,8 +1,18 @@
-env
+# Variables d'environnement
 .env
-venv
-.venv
+.env.*
+!.env.example
+
+# Environnement Python
+.venv/
+venv/
+
+# Python
 __pycache__/
-../__pycache__/
+*.py[cod]
+
+# Logs
 logs/
+
+# Données générées par Scrapy
 videogames_dataset.json

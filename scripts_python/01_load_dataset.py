@@ -14,15 +14,15 @@ print("Database :", os.getenv("DB_NAME"))
 print("User :", os.getenv("DB_USER"))
 print("Password chargé :", bool(os.getenv("DB_PASSWORD")))
 
-JSON_PATH = "scripts_python" / "videogames_dataset.json"
+JSON_FILE = "videogames_dataset.json"
 
 def load_bronze():
-    if not JSON_PATH.exists():
+    if not JSON_FILE.exists():
         raise FileNotFoundError(
-            f"Fichier JSON introuvable : {JSON_PATH}"
+            f"Fichier JSON introuvable : {JSON_FILE}"
         )
 
-    with JSON_PATH.open("r", encoding="utf-8") as file:
+    with JSON_FILE.open("r", encoding="utf-8") as file:
         games = json.load(file)
 
     if not isinstance(games, list):
@@ -58,7 +58,7 @@ def load_bronze():
                             raw_data = EXCLUDED.raw_data,
                             scraped_at = NOW();
                         """,
-                        (url, Json(game)),
+                        ("https://www.metacritic.com", Json(game)),
                     )
 
         print(f"Chargement terminé : {len(games)} jeux traités.")
