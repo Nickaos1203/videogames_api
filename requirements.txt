@@ -4,5 +4,4 @@ Scrapy
 scrapy-user-agents
 psycopg2-binary
 pandas
-dbt-core
-dbt-postgres
+dbt-postgres==1.11.0
