@@ -59,3 +59,13 @@ dbt docs generate
 dbt docs serve
 ```
 
+## Streamlit commandes
+
+- lancement de l'application Streamlit (se positionner à la racine du projet) :
+
+```bash
+streamlit run streamlit/app.py
+````
+
+- " ctrl + c " pour arrêter le serveur
+
