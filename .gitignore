@@ -14,5 +14,7 @@ __pycache__/
 # Logs
 logs/
 
-# Données générées par Scrapy
+# fichier json générées par Scrapy
 videogames_dataset.json
+
+.DS Store

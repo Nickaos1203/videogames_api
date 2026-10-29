@@ -44,3 +44,18 @@ threads : 1
 ```bash
 dbt debug
 ````
+
+- Exécution des modèles DBT dans le dossier "model/gold" + test
+
+```bash
+dbt run --select path:models/gold
+dbt test --select path:models/gold
+```
+
+- Génération de la documentation des modèles + lancement
+
+```bash
+dbt docs generate
+dbt docs serve
+```
+

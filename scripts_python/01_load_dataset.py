@@ -1,4 +1,4 @@
-
+# Script de chargement des données brutes en json du dataset dans bronze.raw_videogames 
 import json
 import os
 from pathlib import Path

@@ -18,7 +18,13 @@ CREATE TABLE bronze.raw_videogames (
 
 
 -- Autorisation sur la base de données, remplacez [USER] par le nom de l'utilisateur
+GRANT USAGE, CREATE ON SCHEMA bronze TO [USER];
+GRANT USAGE, CREATE ON SCHEMA silver TO [USER];
+GRANT USAGE, CREATE ON SCHEMA gold TO [USER];
+
 GRANT USAGE ON SCHEMA bronze TO [USER];
+GRANT USAGE ON SCHEMA silver TO [USER];
+GRANT USAGE ON SCHEMA gold TO [USER];
 
 GRANT INSERT, SELECT, UPDATE
 ON TABLE bronze.raw_videogames
