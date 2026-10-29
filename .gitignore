@@ -1,0 +1,20 @@
+# Variables d'environnement
+.env
+.env.*
+!.env.example
+
+# Environnement Python
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Logs
+logs/
+
+# fichier json générées par Scrapy
+videogames_dataset.json
+
+.DS Store

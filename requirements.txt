@@ -4,3 +4,6 @@ Scrapy
 scrapy-user-agents
 psycopg2-binary
 pandas
+dbt-postgres==1.11.0
+streamlit
+plotly

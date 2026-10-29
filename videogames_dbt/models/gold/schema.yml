@@ -1,0 +1,25 @@
+
+version: 2
+
+models:
+  - name: mart_genre_performance
+    description: "Indicateurs de performance des jeux vidéo par genre."
+    columns:
+      - name: genre
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_jeux
+        data_tests:
+          - not_null
+
+  - name: mart_platform_performance
+    description: "Indicateurs de performance des jeux vidéo par plateforme."
+    columns:
+      - name: plateforme
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_jeux
+        data_tests:
+          - not_null
