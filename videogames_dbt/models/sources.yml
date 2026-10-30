@@ -1,7 +1,35 @@
+
 version: 2
 
 sources:
   - name: bronze
     schema: bronze
+    description: >
+      Couche Bronze contenant les données brutes
+      collectées depuis Metacritic par Scrapy.
+
     tables:
       - name: raw_videogames
+        description: >
+          Données brutes des jeux vidéo stockées
+          au format JSONB, avec les métadonnées
+          d'ingestion.
+        columns:
+          - name: ingestion_id
+            description: Identifiant technique unique de l'ingestion.
+            tests:
+              - not_null
+              - unique
+
+          - name: source_url
+            description: URL de Metacritic.
+            tests:
+              - not_null
+
+          - name: scraped_at
+            description: Horodatage de l'ingestion.
+
+          - name: raw_data
+            description: Données originales du jeu au format JSONB.
+            tests:
+              - not_null

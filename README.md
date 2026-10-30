@@ -51,6 +51,11 @@ dbt debug
 dbt run --select path:models/gold
 dbt test --select path:models/gold
 ```
+ou 
+
+```bash
+dbt build --select path:models/gold
+```
 
 - Génération de la documentation des modèles + lancement
 
@@ -58,6 +63,8 @@ dbt test --select path:models/gold
 dbt docs generate
 dbt docs serve
 ```
+
+
 
 ## Streamlit commandes
 

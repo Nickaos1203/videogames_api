@@ -2,41 +2,66 @@
 version: 2
 
 models:
-  - name: stg_videogames
-    description: "Données des jeux vidéo nettoyées depuis la couche Bronze."
-
+  - name: platform
+    description: Référentiel des plateformes de jeux vidéo.
+    data_tests:
+      - unique:
+          arguments:
+            column_name: platform_id
     columns:
-      - name: ingestion_id
-        description: "Identifiant technique généré par PostgreSQL."
+      - name: platform_name
         data_tests:
-          - unique
           - not_null
+          - unique
 
+  - name: editor
+    description: Référentiel des éditeurs.
+    columns:
+      - name: editor_id
+        data_tests:
+          - not_null
+          - unique
+      - name: editor_name
+        data_tests:
+          - not_null
+          - unique
+
+  - name: genre
+    description: Référentiel des genres.
+    columns:
+      - name: genre_id
+        data_tests:
+          - not_null
+          - unique
+      - name: genre_name
+        data_tests:
+          - not_null
+          - unique
+
+  - name: videogame
+    description: Table des jeux vidéo (une ligne par jeu).
+    columns:
+      - name: videogame_id
+        data_tests:
+          - not_null
+          - unique
       - name: url
-        description: "URL de la fiche du jeu sur Metacritic."
         data_tests:
+          - not_null
           - unique
-          - not_null
-
-      - name: titre
-        description: "Titre du jeu vidéo."
+      - name: editor_id
         data_tests:
-          - not_null
-
-      - name: score_metacritic
-        description: "Score critique Metacritic, sur 100."
-        data_tests:
-          - dbt_utils.accepted_range:
+          - relationships:
               arguments:
-                min_value: 0
-                max_value: 100
-                severity: warn
-
-      - name: score_utilisateurs
-        description: "Score attribué par les utilisateurs, sur 10."
+                to: ref('editor')
+                field: editor_id
+              config:
+                where: "editor_id is not null"
+      - name: genre_id
         data_tests:
-          - dbt_utils.accepted_range:
+          - relationships:
               arguments:
-                min_value: 0
-                max_value: 10
-                severity: warn
+                to: ref('genre')
+                field: genre_id
+              config:
+                where: "genre_id is not null"

@@ -1,16 +1,27 @@
--- Table d'analyse des performance en fonction des plateformes
-{{ config(materialized='table') }}
+
+{{ 
+    config(
+        materialized='table', 
+        schema='gold') 
+}}
 
 SELECT
-    platform AS plateforme,
-    COUNT(*) AS nombre_jeux,
-    ROUND(AVG(score_metacritic), 2) AS score_metacritic_moyen,
-    ROUND(AVG(score_utilisateurs), 2) AS score_utilisateurs_moyen
+    p.platform_id,
+    p.platform_name,
+    COUNT(DISTINCT v.videogame_id) AS nombre_jeux,
+    ROUND(AVG(v.score_metacritic), 2)
+        AS score_metacritic_moyen,
+    ROUND(AVG(v.score_utilisateurs), 2)
+        AS score_utilisateurs_moyen
 
-FROM {{ ref('stg_videogames') }} AS games
-CROSS JOIN LATERAL
-    jsonb_array_elements_text(games.plateformes) AS platform
+FROM {{ ref('platform') }} AS p
 
-GROUP BY platform
+LEFT JOIN {{ ref('videogame_platform') }} AS vp
+    ON p.platform_id = vp.platform_id
 
-ORDER BY nombre_jeux DESC
+LEFT JOIN {{ ref('videogame') }} AS v
+    ON vp.videogame_id = v.videogame_id
+
+GROUP BY
+    p.platform_id,
+    p.platform_name
