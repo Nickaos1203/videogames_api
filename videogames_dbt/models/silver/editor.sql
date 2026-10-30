@@ -1,8 +1,9 @@
 
-{{ config(
-    materialized='table',
-    schema='gold'
-) }}
+{{ 
+    config(materialized='table', 
+    schema='silver') 
+}}
+
 
 WITH editors AS (
     SELECT DISTINCT

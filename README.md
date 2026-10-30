@@ -64,6 +64,8 @@ dbt docs generate
 dbt docs serve
 ```
 
+
+
 ## Streamlit commandes
 
 - lancement de l'application Streamlit (se positionner à la racine du projet) :

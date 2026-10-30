@@ -1,16 +1,21 @@
--- Table d'analyse les performances des jeux par genre
-{{ config(materialized='table') }}
+
+{{ config(materialized='table', schema='gold') }}
 
 SELECT
-    genre,
-    COUNT(*) AS nombre_jeux,
-    ROUND(AVG(score_metacritic), 2) AS score_metacritic_moyen,
-    ROUND(AVG(score_utilisateurs), 2) AS score_utilisateurs_moyen,
-    COUNT(score_metacritic) AS nombre_scores_critiques,
-    COUNT(score_utilisateurs) AS nombre_scores_utilisateurs
+    g.genre_id,
+    g.genre_name,
+    COUNT(v.videogame_id) AS nombre_jeux,
+    ROUND(AVG(v.score_metacritic), 2)
+        AS score_metacritic_moyen,
+    ROUND(AVG(v.score_utilisateurs), 2)
+        AS score_utilisateurs_moyen
 
-FROM {{ ref('stg_videogames') }}
+FROM {{ ref('genre') }} AS g
 
-WHERE genre IS NOT NULL
+LEFT JOIN {{ ref('videogame') }} AS v
+    ON g.genre_id = v.genre_id
 
-GROUP BY genre
+GROUP BY
+    g.genre_id,
+    g.genre_name
+
