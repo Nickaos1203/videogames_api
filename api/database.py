@@ -18,6 +18,7 @@ ALLOWED_TABLES = {
 }
 
 
+# Chargement des variables de connexion à PostgreSQL
 def get_connection():
     return psycopg2.connect(
         host=os.environ["DB_HOST"],
@@ -28,7 +29,7 @@ def get_connection():
         connect_timeout=5,
     )
 
-
+# fonction avec pagination et recherche
 def fetch_gold_table(
     table_name: str,
     limit: int = 100,
@@ -70,6 +71,7 @@ def fetch_gold_table(
         connection.close()
 
 
+# Vérification de la connexion à PostgreSQL
 def check_database():
     connection = get_connection()
 

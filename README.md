@@ -72,7 +72,18 @@ dbt docs serve
 
 ```bash
 streamlit run streamlit/app.py
-````
+```
 
 - " ctrl + c " pour arrêter le serveur
+
+## Luigi (orchestration) commandes
+
+- lancer la pipeline de données (à la racine du projet)
+
+```bash
+python -m luigi \
+  --module orchestration.pipeline \
+  VideogamesPipeline \
+  --local-scheduler
+````
 
