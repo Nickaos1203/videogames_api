@@ -85,5 +85,16 @@ python -m luigi \
   --module orchestration.pipeline \
   VideogamesPipeline \
   --local-scheduler
-````
+```
 
+## FastAPI Commandes
+
+- lancement de l'API à la racine du projet
+
+```bash
+uvicorn api.main:app --reload
+```
+
+- Accéder à l'API : ```http://127.0.0.1:8000```
+
+- Ctrl + C : Arrêter l'API

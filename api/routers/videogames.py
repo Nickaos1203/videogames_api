@@ -10,6 +10,7 @@ from fastapi import APIRouter, HTTPException, Query
 from fastapi.encoders import jsonable_encoder
 
 from api.database import fetch_gold_table
+from api.schemas.videogame import VideogameResponse
 
 
 router = APIRouter(
@@ -18,7 +19,7 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get("/", response_model=list[VideogameResponse])
 def get_games(
     limit: int = Query(100, ge=1, le=1000),
     offset: int = Query(0, ge=0),

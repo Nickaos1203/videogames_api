@@ -10,6 +10,7 @@ from fastapi import APIRouter, HTTPException, Query
 from fastapi.encoders import jsonable_encoder
 
 from api.database import fetch_gold_table
+from api.schemas.editor import EditorResponse
 
 
 router = APIRouter(
@@ -18,7 +19,7 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get("/", response_model=list[EditorResponse])
 def get_editors(
     limit: int = Query(100, ge=1, le=1000),
     offset: int = Query(0, ge=0),
