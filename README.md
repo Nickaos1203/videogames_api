@@ -98,3 +98,12 @@ uvicorn api.main:app --reload
 - Accéder à l'API : ```http://127.0.0.1:8000```
 
 - Ctrl + C : Arrêter l'API
+
+## Pytest commandes
+
+- lancer les tests (à la racine du projet)
+
+```bash
+python -m pytest tests/ -v
+```
+

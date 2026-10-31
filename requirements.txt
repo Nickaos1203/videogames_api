@@ -10,3 +10,5 @@ dbt-postgres==1.11.0
 streamlit
 plotly
 luigi
+pytest
+httpx2
