@@ -1,18 +1,47 @@
 
-from fastapi import FastAPI, HTTPException, Query
-from fastapi.encoders import jsonable_encoder
+"""
+Point d'entrée principal de Video Games Analytics API.
 
-from api.database import fetch_gold_table, check_database
+Initialise l'application FastAPI, configure les routes
+et expose les endpoints de monitoring.
+"""
 
+from fastapi import FastAPI, HTTPException
+
+from api.database import check_database
+from api.routers import (
+    videogames,
+    platforms,
+    genres,
+    editors,
+    quality,
+)
+
+
+# Initialisation de l'application FastAPI
 app = FastAPI(
     title="Video Games Analytics API",
-    description="API REST pour exposer des données de jeux vidéo.",
+    description="API REST permettant d'exposer les données analytiques de jeux vidéo ",
     version="1.0.0",
 )
 
 
+# Enregistrement des routeurs
+app.include_router(videogames.router)
+app.include_router(platforms.router)
+app.include_router(genres.router)
+app.include_router(editors.router)
+app.include_router(quality.router)
+
+
 @app.get("/", tags=["Accueil"])
 def root():
+    """
+    Retourne les informations générales de l'API.
+
+    Returns:
+        dict: Message de bienvenue et lien vers la documentation.
+    """
     return {
         "message": "Bienvenue sur Video Games Analytics API",
         "documentation": "/docs",
@@ -21,91 +50,25 @@ def root():
 
 @app.get("/health", tags=["Monitoring"])
 def health():
+    """
+    Vérifie l'état de fonctionnement de l'API et de PostgreSQL.
+
+    Returns:
+        dict: Statut de l'API et de la connexion à la base.
+
+    Raises:
+        HTTPException: Erreur 503 si PostgreSQL est inaccessible.
+    """
     try:
         check_database()
+
         return {
             "api_status": "healthy",
             "database_status": "connected",
         }
+
     except Exception:
         raise HTTPException(
             status_code=503,
             detail="Connexion à la base de données indisponible.",
         )
-
-
-@app.get("/api/v1/games", tags=["Games"])
-def get_games(
-    limit: int = Query(100, ge=1, le=1000),
-    offset: int = Query(0, ge=0),
-    search: str | None = None,
-):
-    try:
-        data = fetch_gold_table(
-            "mart_videogame_performance",
-            limit,
-            offset,
-            search_column="titre",
-            search=search,
-        )
-        return jsonable_encoder(data)
-    except Exception:
-        raise HTTPException(
-            status_code=500,
-            detail="Erreur lors de la récupération des jeux.",
-        )
-
-
-@app.get("/api/v1/genres", tags=["Genres"])
-def get_genres(
-    limit: int = Query(100, ge=1, le=1000),
-    offset: int = Query(0, ge=0),
-):
-    try:
-        data = fetch_gold_table("mart_genre_performance", limit, offset)
-        return jsonable_encoder(data)
-    except Exception:
-        raise HTTPException(status_code=500, detail="Erreur de récupération des genres.")
-
-
-@app.get("/api/v1/platforms", tags=["Platforms"])
-def get_platforms(
-    limit: int = Query(100, ge=1, le=1000),
-    offset: int = Query(0, ge=0),
-):
-    try:
-        data = fetch_gold_table("mart_platform_performance", limit, offset)
-        return jsonable_encoder(data)
-    except Exception:
-        raise HTTPException(status_code=500, detail="Erreur de récupération des plateformes.")
-
-
-@app.get("/api/v1/editors", tags=["Editors"])
-def get_editors(
-    limit: int = Query(100, ge=1, le=1000),
-    offset: int = Query(0, ge=0),
-    search: str | None = None,
-):
-    try:
-        data = fetch_gold_table(
-            "mart_editor_performance",
-            limit,
-            offset,
-            search_column="editor_name",
-            search=search,
-        )
-        return jsonable_encoder(data)
-    except Exception:
-        raise HTTPException(status_code=500, detail="Erreur de récupération des éditeurs.")
-
-
-@app.get("/api/v1/quality", tags=["Data Quality"])
-def get_quality(
-    limit: int = Query(100, ge=1, le=1000),
-    offset: int = Query(0, ge=0),
-):
-    try:
-        data = fetch_gold_table("mart_data_quality", limit, offset)
-        return jsonable_encoder(data)
-    except Exception:
-        raise HTTPException(status_code=500, detail="Erreur de récupération de la qualité.")

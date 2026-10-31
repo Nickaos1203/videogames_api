@@ -29,8 +29,10 @@ SELECT
     END AS score_metacritic,
 
     CASE
-        WHEN TRIM(raw_data ->> 'score_utilisateurs') ~ '^[0-9]+([.][0-9]+)?$'
-        THEN (raw_data ->> 'score_utilisateurs')::NUMERIC
+        WHEN NULLIF(TRIM(raw_data->>'score_utilisateurs'), '') IS NULL
+            THEN NULL
+        WHEN (raw_data->>'score_utilisateurs')::NUMERIC BETWEEN 0 AND 10
+            THEN (raw_data->>'score_utilisateurs')::NUMERIC
         ELSE NULL
     END AS score_utilisateurs,
     
